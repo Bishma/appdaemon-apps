@@ -1,0 +1,10 @@
+---
+alexa:
+  module: alexa
+  class: Alexa
+roku_channels:
+  module: roku_channels
+  class: RokuChannels
+media_activity:
+  module: media_activity
+  class: MediaActivity
