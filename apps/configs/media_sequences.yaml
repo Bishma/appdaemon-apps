@@ -1,0 +1,117 @@
+activities:
+  living_room:
+    roku:
+      television:
+        device_id: visiotv
+        sequence:
+          - id: power
+            button_id: powerOn
+            state: 'on'
+          - id: input
+            button_id: inputHdmi2
+            state: inputHdmi2
+      soundbar:
+        device_id: boseAmp
+        sequence:
+          - id: power
+            button_id: power
+            state: 'on'
+          - id: input
+            button_id: inputTv
+            state: inputTv
+    ota:
+      television:
+        device_id: visiotv
+        sequence:
+          - id: power
+            button_id: powerOn
+            state: 'on'
+          - id: input
+            button_id: inputTv
+            state: inputTv
+      soundbar:
+        device_id: boseAmp
+        sequence:
+          - id: power
+            button_id: power
+            state: 'on'
+          - id: input
+            button_id: inputTv
+            state: inputTv
+    switch:
+      television:
+        device_id: visiotv
+        sequence:
+          - id: power
+            button_id: powerOn
+            state: 'on'
+          - id: input
+            button_id: input3
+            state: inputHdmi3
+      soundbar:
+        device_id: boseAmp
+        sequence:
+          - id: power
+            button_id: power
+            state: 'on'
+          - id: input
+            button_id: inputTv
+            state: inputTv
+    vinyl:
+      television:
+        device_id: visiotv
+        sequence:
+          - id: power
+            button_id: powerOff
+            state: 'off'
+      soundbar:
+        device_id: boseAmp
+        sequence:
+          - id: power
+            button_id: power
+            state: 'on'
+          - id: input
+            button_id: inputBluetooth
+            state: inputBluetooth
+    'off':
+      television:
+        device_id: visiotv
+        sequence:
+          - id: power
+            button_id: powerOff
+            state: 'off'
+      soundbar:
+        device_id: boseAmp
+        sequence:
+          - id: power
+            button_id: power
+            state: 'off'
+sequences:
+  roku_review_20:
+    - device_id: roku
+      button_id: left
+      repeats: 1
+    - device_id: roku
+      button_id: enter
+      repeats: 0
+  roku_review_60:
+    - device_id: roku
+      button_id: left
+      repeats: 5
+    - device_id: roku
+      button_id: enter
+      repeats: 0
+  roku_review_90:
+    - device_id: roku
+      button_id: left
+      repeats: 8
+    - device_id: roku
+      button_id: enter
+      repeats: 0
+  roku_forward_10min:
+    - device_id: roku
+      button_id: right
+      repeats: 59
+    - device_id: roku
+      button_id: enter
+      repeats: 0
