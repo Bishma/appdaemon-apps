@@ -14,7 +14,7 @@ class MediaActivity(hass.Hass):
         self.roku_url = "http://"+self.args["roku_ip"]+":8060/"
 
         # Load media_activities.yaml
-        with open('configs/media_sequences.yaml') as conf_file:
+        with open('/config/www/media_sequences.yaml') as conf_file:
             self.activity_conf = yaml.safe_load(conf_file)
             self.activities = self.activity_conf['activities']['living_room']
 
