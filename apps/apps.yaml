@@ -5,8 +5,8 @@ alexa:
 roku_channels:
   module: roku_channels
   class: RokuChannels
-  roku_ip: '192.168.68.134'
+  roku_ip: '192.168.68.106'
 media_activity:
   module: media_activity
   class: MediaActivity
-  roku_ip: '192.168.68.134'
+  roku_ip: '192.168.68.106'

@@ -82,14 +82,14 @@ class MediaActivity(hass.Hass):
             for command in sequence:
                 # loop through the sequence and add the commands to the list
                 # I zero-indexed the repeats for grammatical purposes, so add one to make it work in loops
-                repeats = command.get("repeats", 0)  # Get the number of repeats, default to 0 if not present
+                repeats = int(command.get("repeats", 0))  # Get the number of repeats, default to 0 if not present
                 repeats += 1
                 for i in range(repeats):
                     commands.append({"device_id": command["device_id"], "button_id": command["button_id"]})
         # Non-sequence commands
         else:
             # I zero-indexed the repeats for grammatical purposes, so add one to make it work in loops
-            repeats = data.get("repeats", 0)  # Get the number of repeats, default to 0 if not present
+            repeats = int(data.get("repeats", 0))  # Get the number of repeats, default to 0 if not present
             repeats += 1 # add one to the repeats because it's always one less than it should be
 
             # If repeating more than once, send the command multiple times via the command_sender's list support

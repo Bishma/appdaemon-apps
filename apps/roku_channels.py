@@ -4,6 +4,7 @@ import urllib
 import json
 import time
 import xmltodict
+import re
 
 class RokuChannels(hass.Hass):
     def initialize(self):
@@ -13,14 +14,37 @@ class RokuChannels(hass.Hass):
         self.channel_url = "http://"+self.args['roku_ip']+":8060/query/apps"
         self.change_lock = False
         
-        self.run_every(self.update_channels, "now", 5 * 60)
+        self.run_every(self.update_channels, "now", 15)
 
         # TODO: For each channel, set up a listener
         # TODO: Remove this listener
         self.listen_state(self.channel_changer, entity_id="input_select.roku_channels")
 
+        # Listen for changes the the input_select.lr_channel_shortcut entity
+        self.listen_state(self.channel_finder, entity_id="input_text.lr_channel_shortcut")
+
         #print(json.dumps(self.roku_channel_def, indent=2))
         #print(json.dumps(self.ha_channel_list, indent=2))
+
+    def channel_finder(self, entity, attribute, old, new, kwargs):
+        """ Use the value of the lr_channel_shortcut input_text to find the channel ID that wildcard matches the channel name """
+        self.log("Channel finder called with "+new)
+
+        # Get the current value of the input_text
+        channel_search_term = self.entities.input_text.lr_channel_shortcut.state
+
+        # If the channel_search_term is empty or less than 3 characters, return
+        if len(channel_search_term) < 3:
+            return
+
+        # The channel_search_term is the first characters of the channel name, find the value in self.ha_channel_list that matches
+        for channel_name in self.ha_channel_list:
+            # If the channel name matches the search term, set the input_select to that channel and break
+            if bool(re.match(channel_search_term, channel_name, re.I)):
+                self.log("Found channel "+channel_name)
+                self.set_state("input_select.roku_channels", state=channel_name)
+                break
+
 
     def update_channels(self, kwargs):
         # Update the roku_channel input_select every 5 minutes
@@ -46,17 +70,30 @@ class RokuChannels(hass.Hass):
     def set_input_select(self):
         # Set the default option for the input select
         current_app = self.entities.media_player.living_room.attributes.app_name
-        self.call_service("input_select/select_option", entity_id="input_select.roku_channels", option=current_app)
+
+        # If we see an app that's not in the list, set it to Home
+        if current_app not in self.roku_channel_list:
+            self.log("Saw invalid app "+current_app+". Defaulting to Home.")
+            return
+        else:
+            self.log("Saw current app as "+current_app)
+
+        try:
+            self.call_service("input_select/select_option", entity_id="input_select.roku_channels", option=current_app)
+        except Exception:
+            self.error("Unable to set input_select to "+current_app)
+            self.error("generic exception: " + traceback.format_exc())
 
     def create_switches(self):
         # Create a switch for each channel
         for channel in self.roku_channel_list:
+            self.log("Creating switch for "+channel)
             channel_name = channel.split('-', 1)[0].strip()
             entity_name = "switch.lr_roku_"+channel_name.lower().replace(" ", "_")
 
             # Test to see with the switch entity exists
             if not self.entity_exists(entity_name):
-                # Create a swtich entity for each channel
+                # Create a switch entity for each channel
                 self.log("Creating switch entity for "+entity_name)
                 self.set_state(entity_name, state="off", attributes={"friendly_name": "Roku "+channel_name})
     
